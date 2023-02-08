@@ -9,6 +9,8 @@ export interface User {
   password: string;
   displayName: string;
   photoUrl: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AuthResponse {
@@ -16,7 +18,13 @@ export interface AuthResponse {
   user: User;
 }
 
-export interface AuthResponseContextInterface {
-  authResponse: AuthResponse | null;
-  updateAuthResponse: (updatedObj: AuthResponse) => void;
+export interface UserContextInterface {
+  user: User;
+  updateUser: (updatedObj: User) => void;
+}
+
+export interface Schedule {
+  id: number | null;
+  userid: string;
+  dayOffs: string;
 }

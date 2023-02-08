@@ -5,7 +5,7 @@
 @layer components {
 
   .headerLink {
-    @apply cursor-pointer  font-light transition duration-[.4s] hover:text-[#b3b3b3];
+    @apply cursor-pointer font-semibold transition duration-[.4s] hover:text-[#b3b3b3];
   }
 
   .css-hlj6pa-MuiDialogActions-root {
@@ -39,6 +39,6 @@
   }
 
   .schedule-button{
-    @apply p-2 cursor-pointer transition duration-200 ease-out hover:scale-125  items-center
+    @apply p-2 cursor-pointer transition duration-200 ease-out hover:scale-125  items-center disabled:opacity-50 disabled:scale-100
   }
 }

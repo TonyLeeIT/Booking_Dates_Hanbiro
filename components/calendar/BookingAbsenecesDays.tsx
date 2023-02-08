@@ -7,8 +7,11 @@ import Badge from "@mui/material/Badge";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import CheckIcon from "@mui/icons-material/Check";
 import moment from "moment";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, ToastOptions, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useStateContext } from "@/context/ContextProvider";
+import axios, { AxiosError } from "axios";
+import { Schedule } from "@/interface";
 
 type Props = {};
 
@@ -52,11 +55,25 @@ const useStyles = makeStyles({
   },
 });
 
+const toastStyle: ToastOptions<{}> = {
+  position: "top-center",
+  autoClose: 2000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "colored",
+};
+
 const BookingAbsenecesDays = (props: Props) => {
+  const { user } = useStateContext();
+
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const [highlightedDays, setHighlightedDays] = useState<Array<number>>([]);
   const [reStyle, setReStyle] = useState<string | null>();
+  const [pickUpResult, setPickUpResult] = useState<string>("");
   useEffect(() => {
     const styling = (): void => {
       const style = `${classes["css-hlj6pa-MuiDialogActions-root"]} 
@@ -71,10 +88,63 @@ const BookingAbsenecesDays = (props: Props) => {
   }, [reStyle]);
 
   const clearSelected = () => {
-    setHighlightedDays([]);
-    //window.location.reload();
+    axios
+      .delete(`${process.env.NEXT_PUBLIC_SERVER_SIDE_URL}/api/v1/schedule`, {
+        params: { userid: user.userid },
+      })
+      .then((res) => {
+        setHighlightedDays([]);
+        setPickUpResult("");
+        toast.success("Clear schedule successfully", toastStyle);
+      })
+      .catch((err: AxiosError) => {
+        toast.error(`Clear schedule failure ${err.message}`, toastStyle);
+      });
   };
 
+  const pickSchedule = () => {
+    if (highlightedDays.length > 0 && user.userid){
+      axios
+        .post(`${process.env.NEXT_PUBLIC_SERVER_SIDE_URL}/api/v1/schedule`, {
+          userid: user.userid,
+          dayOffs: highlightedDays.toString(),
+        })
+        .then((res) => {
+          const schedule: Schedule = res.data;
+          setPickUpResult(schedule.dayOffs);
+          toast.success("Pick up schedule successfully", toastStyle);
+        })
+        .catch((err: AxiosError) => {
+          toast.error(`Pick up schedule failure ${err.message}`, toastStyle);
+        })
+    }else{
+      toast.warn("Please, choose at least one day", toastStyle);
+    }
+
+  };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_SIDE_URL}/api/v1/schedule`,
+          {
+            params: { userid: user.userid },
+          }
+        );
+        const schedule: Schedule = res.data;
+        if (schedule) {
+          const datesOff: Array<number> = schedule.dayOffs
+            .split(",")
+            .map((day) => Number(day));
+          setHighlightedDays(datesOff);
+          setPickUpResult(schedule.dayOffs);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, [user]);
   return (
     <div className="max-w-md lg:max-w-xl w-full flex flex-col text-pink-800">
       <StaticDatePicker
@@ -87,16 +157,10 @@ const BookingAbsenecesDays = (props: Props) => {
           setSelectedDate(newValue);
           if (newValue?.date() === dayjs().date()) {
             // alert("Please , choose another date other than today");
-            toast.warn("🚀 Please , choose another date other than today!", {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
+            toast.warn(
+              "🚀 Please , choose another date other than today!",
+              toastStyle
+            );
           }
           if (
             newValue &&
@@ -106,16 +170,7 @@ const BookingAbsenecesDays = (props: Props) => {
             setHighlightedDays((currDate) => [...currDate, newValue.date()]);
           }
           if (highlightedDays.length === 3)
-            toast.info("Over limit maximum of 3 choices 😢😢😢", {
-              position: "top-center",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
+            toast.info("Over limit maximum of 3 choices 😢😢😢", toastStyle);
         }}
         renderInput={(params) => <TextField {...params} />}
         renderDay={(day, _value, DayComponentProps) => {
@@ -142,26 +197,31 @@ const BookingAbsenecesDays = (props: Props) => {
       <div className="bg-white w-full shadow-lg md:shadow-xl ">
         <div className="flex justify-end px-5">
           {" "}
-          <button className="schedule-button">Pick</button>
-          <button className="schedule-button" onClick={clearSelected}>
+          <button
+            className="schedule-button"
+            onClick={pickSchedule}
+            disabled={pickUpResult?.split(",").length >= 3}
+          >
+            Pick
+          </button>
+          <button
+            className="schedule-button"
+            onClick={clearSelected}
+            disabled={pickUpResult === "" && highlightedDays.length === 0}
+          >
             Clear
           </button>
         </div>
-        {highlightedDays.length > 0 && (
+        {pickUpResult && (
           <div className="px-5 pb-2">
             {" "}
-            <h1 className="text-md lg:text-xl">{`Schedule Of Lee Min Tae`}</h1>
-            {highlightedDays.map((dayOff, index: number) => (
-              <span className="flex px-10" key={index}>
-                <p className="text-xs lg:text-lg">
-                  DayOff {dayOff}-{dayjs().month()}-{dayjs().year()}
-                </p>
-              </span>
-            ))}
+            <h1 className="text-md lg:text-lg inline">{`Schedule Of ${user.displayName} :`}</h1>
+            <p className="text-xs lg:text-md inline">
+              ` DatesOff {pickUpResult}/{dayjs().month()}/{dayjs().year()}`
+            </p>
           </div>
         )}
       </div>
-
       <ToastContainer />
     </div>
   );

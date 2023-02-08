@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { useEffect } from "react";
 
 // This function can be marked `async` if using `await` inside
 export const middleware = async (request: NextRequest) => {
