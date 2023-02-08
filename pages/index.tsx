@@ -5,8 +5,13 @@ import Image from "next/image";
 import BackgroundImage from "../assets/nasa-Q1p7bh3SHj8-unsplash.jpg";
 import Header from "@/components/Header";
 import { ContextProvider } from "@/context/ContextProvider";
+import { Schedule, User } from "@/interface";
+import axios from "axios";
+interface Props {
+  me: User;
+}
 
-export default function Home() {
+export default function Home({ me }: Props) {
   return (
     <ContextProvider>
       {/*bg-orange-300*/}
@@ -27,3 +32,20 @@ export default function Home() {
     </ContextProvider>
   );
 }
+
+//export const getServerSideProps = async (ctx: any) => {
+//  const jwt = ctx.req?.cookies["jwt"];
+//  const res = await axios.get(
+//    `${process.env.NEXT_PUBLIC_SERVER_SIDE_URL}/api/v1/auth/me`,
+//    {
+//      headers: {
+//        Authorization: "Bearer " + jwt,
+//      },
+//    }
+//  );
+//  return {
+//    props: {
+//      me: res.data,
+//    },
+//  };
+//};
