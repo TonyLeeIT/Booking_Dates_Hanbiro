@@ -8,6 +8,14 @@
     @apply cursor-pointer font-semibold transition duration-[.4s] hover:text-[#b3b3b3];
   }
 
+  .css-14b29qc{
+    @apply !hidden
+  }
+
+  .css-wed0tz.Mui-selected{
+    background-color: rgb(157 23 77) !important;
+  }
+
   .css-hlj6pa-MuiDialogActions-root {
     @apply !hidden
   }

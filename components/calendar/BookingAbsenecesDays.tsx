@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import { StaticDatePicker } from "@mui/x-date-pickers";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 import dayjs, { Dayjs } from "dayjs";
 import Badge from "@mui/material/Badge";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
@@ -32,6 +32,12 @@ const disableDates = (date: Dayjs) => {
   );
 };
 const useStyles = makeStyles({
+  "css-14b29qc": {
+    display: "none !important",
+  },
+  "css-wed0tz.Mui-selected": {
+    backgroundColor: "rgb(157 23 77) !important",
+  },
   "css-hlj6pa-MuiDialogActions-root": {
     display: "none !important",
   },
@@ -85,7 +91,7 @@ const BookingAbsenecesDays = (props: Props) => {
       setReStyle(style);
     };
     styling();
-  }, [reStyle]);
+  }, [classes]);
 
   const clearSelected = () => {
     axios
@@ -103,7 +109,7 @@ const BookingAbsenecesDays = (props: Props) => {
   };
 
   const pickSchedule = () => {
-    if (highlightedDays.length > 0 && user.userid){
+    if (highlightedDays.length > 0 && user.userid) {
       axios
         .post(`${process.env.NEXT_PUBLIC_SERVER_SIDE_URL}/api/v1/schedule`, {
           userid: user.userid,
@@ -116,11 +122,10 @@ const BookingAbsenecesDays = (props: Props) => {
         })
         .catch((err: AxiosError) => {
           toast.error(`Pick up schedule failure ${err.message}`, toastStyle);
-        })
-    }else{
+        });
+    } else {
       toast.warn("Please, choose at least one day", toastStyle);
     }
-
   };
 
   useEffect(() => {
