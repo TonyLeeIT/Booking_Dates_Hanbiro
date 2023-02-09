@@ -1,12 +1,14 @@
 import Image from "next/image";
 import BackgroundImage from "../assets/nasa-Q1p7bh3SHj8-unsplash.jpg";
-import { useState } from "react";
+import { HTMLInputTypeAttribute, useState } from "react";
 import { useRouter } from "next/router";
 import { AuthResponse, Sign } from "../interface";
 import axios, { AxiosError } from "axios";
 import { Alert, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Collapse from "@mui/material/Collapse";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 type Props = {};
 
@@ -22,6 +24,9 @@ const Login = (props: Props) => {
   const [password, setPassword] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState<Message | null>(null);
+  const [type, setType] = useState<HTMLInputTypeAttribute | undefined>(
+    "password"
+  );
 
   const switchTo = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
@@ -44,13 +49,13 @@ const Login = (props: Props) => {
             }
           )
           .then((res) => {
+            const { jwt: token }: AuthResponse = res.data;
+            document.cookie = `jwt=${token}`;
             setMessage({
               status: res.status,
               message: "Authentication Complete!",
             });
             setOpen(true);
-            const { jwt: token }: AuthResponse = res.data;
-            document.cookie = `jwt=${token}`;
             route.push("/");
           })
           .catch((err: AxiosError) => {
@@ -101,7 +106,15 @@ const Login = (props: Props) => {
         break;
     }
   };
-  console.log(userid, password);
+  const handleToggle = () =>{
+    if(type === "password"){
+      setType("text")
+    }
+    if(type === "text"){
+      setType("password")
+    }
+  }
+
   return (
     <div className="h-screen w-screen flex flex-col justify-center bg-white items-center md:bg-transparent font-semibold">
       <Collapse className="absolute top-4" in={open}>
@@ -130,28 +143,38 @@ const Login = (props: Props) => {
         className="-z-10 !hidden sm:!inline object-cover"
       />
 
-      <form className="relative mt-24 space-y-8 rounded-sm lg:rounded-lg bg-white/50 py-10 px-6 md:mt-0 md:max-w-md md:px-14">
+      <form className="relative mt-24 space-y-8 rounded-sm lg:rounded-lg bg-white/50 py-10 px-6 md:mt-0 w-full max-w-sm md:max-w-md md:px-14">
         <h1 className="text-4xl">{`Sign ${sign}`}</h1>
         <div className="space-y-4">
-          <label className="inline-block w-full">
-            <input
-              type="text"
-              placeholder="UID"
-              className={`input`}
-              name="userid"
-              value={userid}
-              onChange={(e) => setUserId(e.target.value)}
-            />
+          <label className="w-full">
+            <span className={`label`}>
+              <input
+                type="text"
+                placeholder="UID"
+                className={`input`}
+                name="userid"
+                value={userid}
+                onChange={(e) => setUserId(e.target.value)}
+                autoFocus
+              />
+            </span>
           </label>
-          <label className="inline-block w-full">
-            <input
-              type="password"
-              placeholder="Password"
-              className={`input`}
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+          <label className="w-full">
+            <span className={`label`}>
+              <input
+                className={`input`}
+                type={type}
+                placeholder="Password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {type === "password" ? (
+                <VisibilityOffIcon className="absolute right-1 top-1/2 h-4 w-4 cursor-pointer" onClick={handleToggle}/>
+              ) : (
+                <VisibilityIcon className="absolute right-1 top-1/2 h-4 w-4 cursor-pointer" onClick={handleToggle} />
+              )}
+            </span>
           </label>
         </div>
         <button

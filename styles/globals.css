@@ -42,11 +42,16 @@
     @apply shadow-lg md:shadow-xl
   }
 
-  .input {
-    @apply w-full bg-transparent px-2 py-3 md:placeholder-[white] border-b md:border-[#fff] border-[#999] focus:bg-transparent;
+  .label {
+    @apply relative flex pt-5 pb-1  border-b md:border-[#fff] border-[#999] focus:bg-transparent;
+  }
+  
+  .input{
+    @apply bg-transparent px-2 outline-none md:text-white w-full
   }
 
   .schedule-button{
     @apply p-2 cursor-pointer transition duration-200 ease-out hover:scale-125  items-center disabled:opacity-50 disabled:scale-100
   }
+
 }

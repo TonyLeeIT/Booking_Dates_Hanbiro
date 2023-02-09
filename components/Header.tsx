@@ -1,7 +1,6 @@
 import { useStateContext } from "@/context/ContextProvider";
-import { User } from "@/interface";
 import { useRouter } from "next/router";
-import React from "react";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
 type Props = {};
 
@@ -18,9 +17,11 @@ const Header = (props: Props) => {
       {" "}
       <ul className="space-x-5 md:space-x-10 flex">
         <li className="headerLink">{user.displayName}</li>
-        <li className="headerLink" onClick={signOut}>
-          Sign Out
-        </li>
+        <div className="flex">
+          {" "}
+          <li>Sign Out</li>
+          <ExitToAppIcon className="headerLink" onClick={signOut} />
+        </div>
       </ul>
     </div>
   );
