@@ -155,7 +155,6 @@ const Login = (props: Props) => {
                 name="userid"
                 value={userid}
                 onChange={(e) => setUserId(e.target.value)}
-                autoFocus
               />
             </span>
           </label>
