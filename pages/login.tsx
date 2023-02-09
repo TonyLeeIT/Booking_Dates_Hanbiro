@@ -70,6 +70,7 @@ const Login = (props: Props) => {
               setOpen(false);
             }, 2000);
           });
+        e.currentTarget.blur();
         break;
       case Sign.Up:
         axios
@@ -103,17 +104,18 @@ const Login = (props: Props) => {
               setOpen(false);
             }, 2000);
           });
+        e.currentTarget.blur();
         break;
     }
   };
-  const handleToggle = () =>{
-    if(type === "password"){
-      setType("text")
+  const handleToggle = () => {
+    if (type === "password") {
+      setType("text");
     }
-    if(type === "text"){
-      setType("password")
+    if (type === "text") {
+      setType("password");
     }
-  }
+  };
 
   return (
     <div className="h-screen w-screen flex flex-col justify-center bg-white items-center md:bg-transparent font-semibold">
@@ -169,21 +171,27 @@ const Login = (props: Props) => {
                 onChange={(e) => setPassword(e.target.value)}
               />
               {type === "password" ? (
-                <VisibilityOffIcon className="absolute right-1 top-1/2 h-4 w-4 cursor-pointer" onClick={handleToggle}/>
+                <VisibilityOffIcon
+                  className="absolute right-1 top-1/2 h-4 w-4 cursor-pointer"
+                  onClick={handleToggle}
+                />
               ) : (
-                <VisibilityIcon className="absolute right-1 top-1/2 h-4 w-4 cursor-pointer" onClick={handleToggle} />
+                <VisibilityIcon
+                  className="absolute right-1 top-1/2 h-4 w-4 cursor-pointer"
+                  onClick={handleToggle}
+                />
               )}
             </span>
           </label>
         </div>
         <button
-          className="w-full rounded bg-[#E50914] py-2"
+          className="w-full rounded  py-2 text-white bg-[#E50914] hover:bg-red-700 active:bg-red-500  focus:ring focus:ring-red-300"
           onClick={handleClick}
         >
           {`Sign ${sign}`}
         </button>
         <button
-          className="cursor-pointer text-blue-700 hover:underline"
+          className="cursor-pointer text-blue-700 hover:underline underline"
           onClick={switchTo}
         >
           Sign {sign === Sign.In ? Sign.Up : Sign.In} now

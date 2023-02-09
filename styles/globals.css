@@ -47,7 +47,7 @@
   }
   
   .input{
-    @apply bg-transparent px-2 outline-none md:text-white w-full placeholder:text-white
+    @apply bg-transparent px-2 outline-none md:text-white w-full md:placeholder:text-white
   }
 
   .schedule-button{
