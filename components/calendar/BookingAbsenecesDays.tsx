@@ -220,9 +220,9 @@ const BookingAbsenecesDays = (props: Props) => {
         {pickUpResult && (
           <div className="px-5 pb-2">
             {" "}
-            <h1 className="text-md lg:text-lg inline">{`Schedule Of ${user.displayName} :`}</h1>
+            <h1 className="text-md lg:text-lg inline">{`Schedule Of ${user.displayName} : `}</h1>
             <p className="text-xs lg:text-md inline">
-              ` DatesOff {pickUpResult}/{dayjs().month()}/{dayjs().year()}`
+              DatesOff {pickUpResult}/{dayjs().month() + 1}/{dayjs().year()}
             </p>
           </div>
         )}
