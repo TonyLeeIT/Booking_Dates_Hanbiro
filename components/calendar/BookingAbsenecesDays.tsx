@@ -27,7 +27,7 @@ const isNextMonth = (date: Dayjs) => {
 const disableDates = (date: Dayjs) => {
   return (
     isWeekend(date) ||
-    //dayjs().month() < date.month() ||
+    dayjs().month() + 1 < date.month() ||
     dayjs().year() < date.year()
   );
 };
@@ -150,6 +150,19 @@ const BookingAbsenecesDays = (props: Props) => {
       }
     })();
   }, [user]);
+
+  const checkHighLightDays = (
+    highlightedDays: Array<number>,
+    day: dayjs.Dayjs
+  ): Boolean => {
+    const currentMonth = dayjs().month();
+    const currentDay = dayjs().date();
+    for (let highLightDay of highlightedDays) {
+      if (highLightDay < currentDay && currentMonth == day.month())
+        return false;
+    }
+    return true;
+  };
   return (
     <div className="max-w-md lg:max-w-xl w-full flex flex-col text-pink-800">
       <StaticDatePicker
@@ -181,13 +194,16 @@ const BookingAbsenecesDays = (props: Props) => {
         renderDay={(day, _value, DayComponentProps) => {
           const isSelected =
             !DayComponentProps.outsideCurrentMonth &&
-            highlightedDays.indexOf(day.date()) >= 0;
+            highlightedDays.indexOf(day.date()) >= 0 &&
+            checkHighLightDays(highlightedDays, day);
+          day.month;
           return (
             <Badge
               key={day.toString()}
               overlap="circular"
               badgeContent={
                 isSelected &&
+                day.month() <= dayjs().month() + 1 &&
                 //dayjs().month() == day.month() &&
                 dayjs().year() == day.year() ? (
                   <CheckIcon color="success" />
@@ -221,9 +237,7 @@ const BookingAbsenecesDays = (props: Props) => {
           <div className="px-5 pb-2">
             {" "}
             <h1 className="text-md lg:text-lg inline">{`Schedule Of ${user.displayName} : `}</h1>
-            <p className="text-xs lg:text-md inline">
-              DatesOff {pickUpResult}/{dayjs().month() + 1}/{dayjs().year()}
-            </p>
+            <p className="text-xs lg:text-md inline">DatesOff {pickUpResult}</p>
           </div>
         )}
       </div>
