@@ -27,7 +27,7 @@ const isNextMonth = (date: Dayjs) => {
 const disableDates = (date: Dayjs) => {
   return (
     isWeekend(date) ||
-    dayjs().month() < date.month() ||
+    //dayjs().month() < date.month() ||
     dayjs().year() < date.year()
   );
 };
@@ -170,12 +170,12 @@ const BookingAbsenecesDays = (props: Props) => {
           if (
             newValue &&
             newValue.date() != dayjs().date() &&
-            highlightedDays.length < 3
+            highlightedDays.length < 5
           ) {
             setHighlightedDays((currDate) => [...currDate, newValue.date()]);
           }
-          if (highlightedDays.length === 3)
-            toast.info("Over limit maximum of 3 choices 😢😢😢", toastStyle);
+          if (highlightedDays.length === 5)
+            toast.info("Over limit maximum of 5 choices 😢😢😢", toastStyle);
         }}
         renderInput={(params) => <TextField {...params} />}
         renderDay={(day, _value, DayComponentProps) => {
@@ -188,7 +188,7 @@ const BookingAbsenecesDays = (props: Props) => {
               overlap="circular"
               badgeContent={
                 isSelected &&
-                dayjs().month() == day.month() &&
+                //dayjs().month() == day.month() &&
                 dayjs().year() == day.year() ? (
                   <CheckIcon color="success" />
                 ) : undefined
@@ -205,7 +205,7 @@ const BookingAbsenecesDays = (props: Props) => {
           <button
             className="schedule-button"
             onClick={pickSchedule}
-            disabled={pickUpResult?.split(",").length >= 3}
+            disabled={pickUpResult?.split(",").length >= 5}
           >
             Pick
           </button>
