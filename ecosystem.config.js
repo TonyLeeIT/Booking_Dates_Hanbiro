@@ -8,6 +8,7 @@ module.exports = {
 
   deploy: {
     production: {
+      key: "E:/info_api/ssh/private.key",
       user: "root",
       host: "103.160.89.20",
       ref: "origin/main",
@@ -15,7 +16,7 @@ module.exports = {
       path: "/var/www/html",
       "pre-deploy-local": "",
       "post-deploy":
-        "npm install && npm run build && pm2 reload ecosystem.config.js --env production",
+        "npm install --legacy-peer-deps && npm run build && pm2 reload ecosystem.config.js --env production",
       "pre-setup": "",
     },
   },
