@@ -4,14 +4,12 @@ module.exports = {
       script: "npm start",
       env: {
         NODE_ENV: "production",
-        PORT: 3333,
       },
     },
   ],
 
   deploy: {
     production: {
-      key: "private.key",
       user: "root",
       host: "103.160.89.20",
       ref: "origin/main",
@@ -21,7 +19,7 @@ module.exports = {
       "post-deploy":
         "npm install && npm run build && pm2 reload ecosystem.config.js --env production",
       "pre-setup": "",
-      ssh_options: "ForwardAgent=yes",
+      ssh_options: "StrictHostKeyChecking=no",
     },
   },
 };
