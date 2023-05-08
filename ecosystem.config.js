@@ -2,14 +2,12 @@ module.exports = {
   apps: [
     {
       script: "npm start",
-      env: {
-        NODE_ENV: "production",
-      },
     },
   ],
 
   deploy: {
     production: {
+      key: "~/.ssh/id_rsa",
       user: "root",
       host: "103.160.89.20",
       ref: "origin/main",
