@@ -15,7 +15,7 @@ module.exports = {
       user: "root",
       host: "103.160.89.20",
       ref: "origin/main",
-      repo: "https://github.com/TonyLeeIT/Booking_Dates_Hanbiro",
+      repo: "git@github.com:TonyLeeIT/Booking_Dates_Hanbiro.git",
       path: "/var/www/html",
       "pre-deploy-local": "",
       "post-deploy":
